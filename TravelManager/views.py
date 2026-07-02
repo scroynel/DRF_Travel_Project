@@ -25,10 +25,16 @@ class ProjectPlaceViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectPlaceSerializer
 
 
-class ProjectPlacesView(generics.ListAPIView):
+class ProjectPlacesView(viewsets.ModelViewSet):
     serializer_class = ProjectPlacesSerializer
 
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         return ProjectPlace.objects.filter(project_id=project_id)
+    
+
+# class ProjectPlaceView(viewsets.ModelViewSet):
+#     serializer_class = ProjectPlacesSerializer
+
+#     def get_obje

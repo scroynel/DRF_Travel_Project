@@ -21,9 +21,10 @@ class ProjectPlaceSerializer(serializers.ModelSerializer):
 
 
 class ProjectPlacesSerializer(serializers.ModelSerializer):
-    place_name = serializers.CharField(source='place.title')
+    place_name = serializers.CharField(source='place.title', read_only=True)
 
 
     class Meta:
         model = ProjectPlace
         fields = ('id', 'place', 'place_name', 'notes', 'visited')
+        read_only_fields = ('place', )
