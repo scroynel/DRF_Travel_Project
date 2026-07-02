@@ -18,3 +18,12 @@ class ProjectPlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectPlace
         fields = '__all__'
+
+
+class ProjectPlacesSerializer(serializers.ModelSerializer):
+    place_name = serializers.CharField(source='place.title')
+
+
+    class Meta:
+        model = ProjectPlace
+        fields = ('id', 'place', 'place_name', 'notes', 'visited')

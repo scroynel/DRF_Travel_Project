@@ -1,6 +1,6 @@
-from rest_framework import viewsets, exceptions
+from rest_framework import viewsets, exceptions, generics
 from .models import Project, Place, ProjectPlace
-from .serializers import ProjectSerializer, PlaceSerializer, ProjectPlaceSerializer
+from .serializers import ProjectSerializer, PlaceSerializer, ProjectPlaceSerializer, ProjectPlacesSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -23,3 +23,12 @@ class PlaceViewSet(viewsets.ModelViewSet):
 class ProjectPlaceViewSet(viewsets.ModelViewSet):
     queryset = ProjectPlace.objects.all()
     serializer_class = ProjectPlaceSerializer
+
+
+class ProjectPlacesView(generics.ListAPIView):
+    serializer_class = ProjectPlacesSerializer
+
+
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        return ProjectPlace.objects.filter(project_id=project_id)
