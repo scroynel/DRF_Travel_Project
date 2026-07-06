@@ -32,9 +32,3 @@ class ProjectPlacesView(viewsets.ModelViewSet):
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         return ProjectPlace.objects.filter(project_id=project_id)
-    
-
-# class ProjectPlaceView(viewsets.ModelViewSet):
-#     serializer_class = ProjectPlacesSerializer
-
-#     def get_obje
