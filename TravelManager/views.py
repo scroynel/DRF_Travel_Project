@@ -10,7 +10,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         obj = self.get_object()
-        if obj.place.filter(visited=True).exists():
+        if obj.places.filter(visited=True).exists():
             raise exceptions.ValidationError(f'Cannot delete Project - {obj.name} with visited places')
         return super().destroy(request, *args, **kwargs)
 

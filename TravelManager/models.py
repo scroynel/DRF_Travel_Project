@@ -21,7 +21,7 @@ class Place(models.Model):
 
 
 class ProjectPlace(models.Model):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='place')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='places')
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
     notes = models.TextField(blank=True, default='')
     visited = models.BooleanField(default=False)
