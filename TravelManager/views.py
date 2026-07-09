@@ -32,3 +32,9 @@ class ProjectPlacesView(viewsets.ModelViewSet):
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         return ProjectPlace.objects.filter(project_id=project_id)
+    
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['project_id'] = self.kwargs['project_id']
+        return context

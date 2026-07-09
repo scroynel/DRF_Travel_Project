@@ -23,7 +23,7 @@ class ProjectSerializer(serializers.ModelSerializer):
                 response = fetch_place_from_api(external_id)
                 
                 if not response:
-                    raise serializers.ValidationError('Place {external_id} not found in external API')
+                    raise serializers.ValidationError(f'Place {external_id} not found in external API')
 
                 place = Place.objects.create(
                     external_id = external_id,
@@ -55,9 +55,39 @@ class ProjectPlaceSerializer(serializers.ModelSerializer):
 
 class ProjectPlacesSerializer(serializers.ModelSerializer):
     place_name = serializers.CharField(source='place.title', read_only=True)
-
+    external_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = ProjectPlace
-        fields = ('id', 'place', 'place_name', 'notes', 'visited')
+        fields = ('id', 'external_id', 'place', 'place_name', 'notes', 'visited')
         read_only_fields = ('place', )
+
+    
+    def create(self, validated_data):
+        external_id = validated_data['external_id']
+        project = Project.objects.get(pk=self.context['project_id'])
+
+        place = Place.objects.filter(external_id=external_id).first()
+
+        if not place:
+            response = fetch_place_from_api(external_id)
+
+            if not response:
+                raise serializers.ValidationError(f'Place {external_id} not found in external API') 
+            
+            place = Place.objects.create(
+                external_id = external_id,
+                title = response['data']['title']
+            )
+
+        if ProjectPlace.objects.filter(project=project, place=place).exists():
+            raise serializers.ValidationError('This place is already in the project')
+        
+        project_place = ProjectPlace.objects.create(
+            project = project,
+            place = place,
+            notes = validated_data.get('notes'),
+            visited = validated_data.get('visited') 
+        )
+
+        return project_place
