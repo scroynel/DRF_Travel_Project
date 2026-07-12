@@ -1,6 +1,6 @@
 from rest_framework import viewsets, exceptions, generics
 from .models import Project, Place, ProjectPlace
-from .serializers import ProjectSerializer, PlaceSerializer, ProjectPlaceSerializer, ProjectPlacesSerializer
+from .serializers import ProjectSerializer, PlaceSerializer, ProjectPlaceSerializer, ProjectPlacesSerializer, ProjectPlacesUpdateSerializer
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -26,13 +26,16 @@ class ProjectPlaceViewSet(viewsets.ModelViewSet):
 
 
 class ProjectPlacesView(viewsets.ModelViewSet):
-    serializer_class = ProjectPlacesSerializer
-
-
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         return ProjectPlace.objects.filter(project_id=project_id)
     
+
+    def get_serializer_class(self):
+        if self.action in ['update', 'partial_update']:
+            return ProjectPlacesUpdateSerializer
+        return ProjectPlacesSerializer
+
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

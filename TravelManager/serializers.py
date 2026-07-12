@@ -91,3 +91,9 @@ class ProjectPlacesSerializer(serializers.ModelSerializer):
         )
 
         return project_place
+    
+
+class ProjectPlacesUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectPlace
+        fields = ('notes', 'visited')
